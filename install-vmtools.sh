@@ -1,5 +1,6 @@
 !#/bin/bash
 # Install VMware-Tools
+# On standard linux installs use "apt-get install open-vmtools"
 mkdir /mnt/cdrom
 mount /dev/cdrom /mnt/cdrom
 mkdir /temp-vmware-tools
