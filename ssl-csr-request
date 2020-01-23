@@ -1,0 +1,3 @@
+# Used in conjuntion with ssl-csr-config file.  Rename it to config.txt
+# rename hostname to the actual hostname of the device
+openssl req -new -sha256 -nodes -out hostname.csr -newkey rsa:2048 -keyout hostname.key -config config.txt
