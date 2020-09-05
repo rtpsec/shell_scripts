@@ -1,0 +1,46 @@
+#########################################################################################################
+#  Checking Netstat Table for Ports Open:
+#########################################################################################################
+
+fun_check_ports() {
+
+# Don't run if backup is currently running
+if [ $backup_status -eq "0" ]; then
+echo -n "       [$5/8] checking $2: "
+
+        if (( $(netstat -anp |grep 0.0.0.0 | grep LISTEN |grep $1 $3 | wc -l) == 0 ));
+        then
+                # The service is down
+                # Run this command:  pgpsysconf --restart httpd"
+                mail -s "$email_prefix $(hostname) has detected $2 $4" $email < /dev/null
+        else
+        echo "OK"
+
+        fi
+
+fi
+
+}
+
+fun_port_scan() {
+# $1 is the port to check
+# $2 is the friendly name of the service
+# $3 is an extra entry in netstat check, make sure it starts with a pipe |
+# $4 is the message displayed on the alert
+# $5 is the number it's running in
+
+echo "Checking Open Ports"
+echo "  ========================================================="
+
+fun_check_ports "9000" "webdmin gui" "" " is not listening on port 9000" "1"
+fun_check_ports "httpd" "email portal" "" " is not listening on port 443" "2"
+fun_check_ports "444" "pgptcpwrapper" "" " (clustering) is not listening on port 444" "3"
+fun_check_ports "pgpproxyd" "Email proxy (pgpproxyd)" "" " port is not listening" "4"
+fun_check_ports "pgptokend" "PGP Ignition" "" " Key Service is not running" "5"
+fun_check_ports "pgpsyncd" "PGP Desktop" "" " listener service is not running" "6"
+fun_check_ports "slapd" "Ldap key" "" " service (slapd) is not running" "7"
+fun_check_ports "java" "Tomcat" "" " Service isn't running" "8"
+echo "  ========================================================="
+}
+
+fun_port_scan
