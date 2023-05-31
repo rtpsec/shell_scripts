@@ -1,0 +1,18 @@
+# This code will connect to a Teams endpoint and send a notification to a channel. 
+# You will need to set the endpoint and token variables to your Teams endpoint and authorization token. 
+# You will also need to create a file named token.txt and save your authorization token in the file.
+
+#!/bin/bash
+
+# Get the Teams endpoint and authorization token
+endpoint="https://outlook.office.com/api/v2.0/"
+token=$(cat /path/to/token.txt)
+
+# Create a Teams client
+client=$(curl -s -X POST -H "Authorization: Bearer $token" $endpoint/oauth2/token)
+
+# Send a notification to a channel
+curl -s -X POST -H "Authorization: Bearer $token" -H "Content-Type: application/json" -d '{
+  "channelId": "#general",
+  "text": "This is a notification from Bash!"
+}' $endpoint/conversations/postMessage
